@@ -53,7 +53,10 @@ class YouTubeTranscriptCli():
         if parsed_args.translate:
             transcript = transcript.translate(parsed_args.translate)
 
-        return transcript.fetch()
+        if parsed_args.words_json:
+            return transcript.fetch_timed_words_json()
+        else:
+            return transcript.fetch()
 
     def _parse_args(self):
         parser = argparse.ArgumentParser(
@@ -129,6 +132,11 @@ class YouTubeTranscriptCli():
             '--cookies',
             default=None,
             help='The cookie file that will be used for authorization with youtube.'
+        )
+        parser.add_argument(
+            '--words_json',
+            default=None,
+            help='Get JSON timed words transcript'
         )
             
         return parser.parse_args(self._args)

@@ -128,6 +128,41 @@ class YouTubeTranscriptApi():
         return cls.list_transcripts(video_id, proxies, cookies).find_transcript(languages).fetch()
     
     @classmethod
+    def get_transcript_timed_words_json(cls, video_id, languages=('en',), proxies=None, cookies=None):
+        """
+        Retrieves the transcript for a single video. This is just a shortcut for calling::
+
+            YouTubeTranscriptApi.list_transcripts(video_id, proxies).find_transcript(languages).fetch_timed_words_json()
+
+        :param video_id: the youtube video id
+        :type video_id: str
+        :param languages: A list of language codes in a descending priority. For example, if this is set to ['de', 'en']
+        it will first try to fetch the german transcript (de) and then fetch the english transcript (en) if it fails to
+        do so.
+        :type languages: list[str]
+        :param proxies: a dictionary mapping of http and https proxies to be used for the network requests
+        :type proxies: {'http': str, 'https': str} - http://docs.python-requests.org/en/master/user/advanced/#proxies
+        :param cookies: a string of the path to a text file containing youtube authorization cookies
+        :type cookies: str
+        :return: a list of dictionaries containing the sentence with words in the 'segs' key
+        :rtype [
+            {
+                'tStartMs': int,
+                'dDurationMs': int,
+                'aAppend': int,
+                'segs': [
+                    {
+                        'utf8': str,
+                        'tOffsetMs': int,
+                        'acAsrConf': int
+                    }
+                ]
+            }
+        ]:
+        """
+        return cls.list_transcripts(video_id, proxies, cookies).find_transcript(languages).fetch_timed_words_json()
+
+    @classmethod
     def _load_cookies(cls, cookies, video_id):
         cookie_jar = {}
         try:

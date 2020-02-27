@@ -258,6 +258,30 @@ class Transcript():
             self._http_client.get(self._url).text
         )
 
+    def fetch_timed_words_json(self):
+        """
+        Loads the actual transcript data with timed words in JSON format.
+
+        :return: a list of dictionaries containing the sentence with words in the 'segs' key
+        :rtype [
+            {
+                'tStartMs': int,
+                'dDurationMs': int,
+                'aAppend': int,
+                'segs': [
+                    {
+                        'utf8': str,
+                        'tOffsetMs': int,
+                        'acAsrConf': int
+                    }
+                ]
+            }
+        ]:
+        """
+
+        result = self._http_client.get(self._url + "&fmt=json3").json()
+        return result["events"]
+
     def __str__(self):
         return '{language_code} ("{language}"){translation_description}'.format(
             language=self.language,
